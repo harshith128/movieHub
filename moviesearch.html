@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Movie</title>
+    <style>
+        body {
+            background-color: wheat;
+            background-image: radial-gradient(rgb(152, 255, 241), rgb(165, 164, 250));
+            color: navy;
+        }
+        /* body * {
+            background-color: wheat;
+        } */
+        input::placeholder{
+            padding: 10px;
+            color: navy;
+        }
+        input {
+            height: 20px;
+            margin: auto 30px;
+            padding: 5px;
+            text-align: center;
+        }
+        .search > input{
+            background-image: radial-gradient(rgb(233, 145, 145), rgb(222, 152, 255));
+        }
+        #movie, #year, #movieImdb, #movieTitle {
+            border: 0;
+            border-bottom: 2px solid navy;
+            outline: 0;
+        }
+        input:focus {
+            border-radius: 20px;
+            outline: none;
+            background-color: paleturquoise;
+            color: navy;
+        }
+        #page {
+            width: 70%;
+            margin: auto;
+        }
+        #page > *{
+            text-align: center;
+        }
+        .display {
+            width: 100%;
+            display: flex;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+            margin-top: 20px;
+            background-color: palevioletred;
+            color: white;
+            position: relative;
+        }
+        .search > *:not(button){
+            border: none;
+        }
+        .all:hover {
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.6);
+        }
+        .display * {
+            background-color: palevioletred;
+        }
+        .imgDiv {
+            padding: 0;
+            width: 17%;
+        }
+        .recommended {
+            position: absolute;
+            background-color: green;
+            padding: 10px;
+            color: black;
+            top: -10px;
+            right: 0px;
+            animation: flicker 1.5s infinite alternate;
+        }
+        .content {
+            width: 83%;
+        }
+        .imgDiv, .content {
+            margin: auto , 1%;
+        }
+        .content > p {
+            padding: 0px;
+            padding-left: 20px;
+            text-align: left;
+        }
+        .left{
+            text-align: left;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .btn-css {
+            background-color: navy;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+        .btn-css:hover{
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.6);
+        }
+        #more {
+            border: none;
+            background-color: navy;
+            color: white;
+            margin-top: 20px;
+        }
+        #more:hover{
+            box-shadow: 0 3px 10px rgb(0 0 0 / 0.6);
+        }
+        .error {
+            width: 30%;
+            margin: auto;
+            margin-top: 25px;
+            border: 5px solid navy;
+            color: rgb(255, 0, 0);
+            animation: flicker 1.5s infinite alternate;
+        }
+        .error > p{
+            font-size: 28px;
+        }
+        .error > h3{
+            font-size: 36px;
+        }
+        .error > img {
+            width: 100%;
+        }
+        
+        /* Flickering animation */
+        @keyframes flicker {
+    
+        0%, 18%, 22%, 25%, 53%, 57%, 100% {
+  
+                text-shadow:
+                0 0 4px #fff,
+                0 0 11px #fff,
+                0 0 19px #fff,
+                0 0 40px rgb(255, 0, 0),
+                0 0 80px rgb(255, 0, 0),
+                0 0 90px rgb(255, 0, 0),
+                0 0 100px rgb(255, 0, 0),
+                0 0 150px rgb(255, 0, 0);
+            }
+    
+            20%, 24%, 55% {        
+            text-shadow: none;
+            }
+            50% {
+                border-color: red;
+            }
+            50% {
+                background-color: wheat;
+            } 
+        }
+        .extra {
+            text-align: center;
+            background-color: palevioletred;
+        }
+        .extra > *:not(.makecenter){
+            background-color: palevioletred;
+            text-align: left;
+            margin: auto;
+            padding: auto;
+        }
+        .extra > p {
+            width: 95%;
+            margin: auto;
+        }
+        .selection > button:not(.active){
+            color: rebeccapurple;
+            background-color: rgb(7, 220, 248);
+            padding: 5px;
+            margin: 25px 10px;
+        }
+        .makecenter{
+            border: none;
+            text-align: center;
+            margin: auto;
+        }
+        .changebg1{
+            padding: 10px;
+            color: purple;
+        }
+        .changebg2{
+            background-color: purple;
+            padding: 10px;
+            color: peachpuff;
+        }
+        .active {
+            background-color: palevioletred;
+            padding: 5px;
+            margin: 25px 10px;
+        }
+        .search {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="page">
+        <h1><span class="changebg1">MOVIE</span><span class="changebg2">HUB</span></h1>
+        <div class="selection">
+            <button id="key">Search By Key</button>
+            <button id="tle" class="active">Search By Title</button>
+            <button id="imid">Search By imdbID</button>
+        </div>
+            <div class="search" id="random">
+                <input type="text" id="movie" placeholder="Title of the key"/>
+                <input type="number" id="year" placeholder="Year of Release" max="2020"/>
+                <button id="btn" class="btn-css">Search</button>
+            </div>
+            <div class="search" id="ByimdbId">
+                <input type="text" id="movieImdb" placeholder="Enter imdbID"/>
+                <button id="btnImdb" class="btn-css">Search</button>
+            </div>
+            <div class="search" id="BymovieName">
+                <input type="text" id="movieTitle" placeholder="Title of the Movie"/>
+                <button id="btnMov" class="btn-css">Search</button>
+            </div>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
+<script>
+    document.getElementById("BymovieName").style.display = "block";
+    document.getElementById("key").addEventListener("click", selectway.bind(event, "key", "random"));
+    document.getElementById("tle").addEventListener("click", selectway.bind(event, "tle", "BymovieName"));
+    document.getElementById("imid").addEventListener("click", selectway.bind(event, "imid", "ByimdbId"));
+
+    function selectway(which, what){
+        let act = document.querySelector(".active");
+        // for(let i=0 ; i<act.length ; i++){
+            act.classList.remove("active")
+        let newAct = document.getElementById(which);
+        newAct.className+=" active";
+        let change = document.getElementsByClassName("search");
+        for(let i=0 ; i<change.length ; i++){
+            change[i].style.display = "none";
+        }
+        document.getElementById(what).style.display = "block";
+    }
+
+    document.getElementById("btn").addEventListener("click", searchTitle);
+    document.getElementById("btnMov").addEventListener("click", searchmovie);
+    document.getElementById("btnImdb").addEventListener("click", searchimdb);
+    let i = 1;
+
+    async function searchTitle(){
+        try {
+            let movie = document.getElementById("movie").value;
+            if(movie == ""){
+                alert("Please enter Title");
+                return null;
+            }
+            let year = document.getElementById("year").value;
+            let result = document.getElementById("result");
+            result.innerHTML = null;
+
+                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}`);
+
+                let data = await response.json();
+                let list = data.Search;
+                console.log(data.Response);
+                if(data.Response == "False"){
+                    let div = document.createElement("div")
+                    let errmess = document.createElement("p");
+                    // errmess.setAttribute("class", "errtext")
+                    errmess.innerText = "No matches available."
+                    let err = document.createElement("h3");
+                    err.innerText = 404;
+                    let errimg = document.createElement("img");
+                    errimg.src = "https://c.tenor.com/rSDkTtKXtpQAAAAC/error-computer.gif"
+                    div.append(err, errmess, errimg);
+                    div.setAttribute("class", "error");
+                    result.append(div)
+                    return null;
+                }
+
+                for(const ele of list){
+                    // console.log(ele)
+                    // let imdb = ele.imdbID;
+                    let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
+                    let movieData = await details.json();
+                    console.log(movieData);
+
+                    let div = document.createElement("div");
+                    div.setAttribute("class", "display")
+
+                    let div_img = document.createElement("div");
+                    let div_cont = document.createElement("div");
+                    div_cont.setAttribute("class", "left")
+
+                    let name = document.createElement("p");
+                    name.innerText = `Title: ${movieData.Title}`;
+
+                    let Year = document.createElement("p");
+                    Year.innerText = `Year: ${movieData.Year}`;
+
+                    let Director = document.createElement("p");
+                    Director.innerText = `Director: ${movieData.Director}`;
+
+                    let Actors = document.createElement("p");
+                    Actors.innerText = `Actors: ${movieData.Actors}`;
+
+                    let Plot = document.createElement("p");
+                    Plot.innerText = `Plot: ${movieData.Plot}`;
+
+                    let imdbRating = document.createElement("p");
+                    imdbRating.innerText = `imdbRating: ${movieData.imdbRating}`;
+
+                    div_cont.append(name, Year, Director, Actors, imdbRating, Plot);
+                    div_cont.setAttribute("class", "content");
+
+                    let image = document.createElement("img");
+                    image.src = movieData.Poster;
+                    div_img.setAttribute("class", "imgDiv");
+                    
+                    if(movieData.imdbRating > 8.5){
+                        let recomend = document.createElement("p");
+                        recomend.innerText = "Recommended";
+                        recomend.setAttribute("class", "recommended");
+                        div_img.append(image, recomend);
+                    } else {
+                        div_img.append(image);
+                    }
+
+                    let extraDiv = document.createElement("div");
+                    extraDiv.setAttribute("id", ele.imdbID);
+                    extraDiv.setAttribute("class", "extra");
+                    let extrabtn = document.createElement("button");
+                    extrabtn.innerText = "v";
+                    extrabtn.setAttribute("class", "makecenter")
+                    extrabtn.onclick = function(){
+                        getMore(ele.imdbID)
+                    }
+                    extraDiv.append(extrabtn);
+
+                    div.append(div_img, div_cont);
+                    let div2 = document.createElement("div");
+                    div2.setAttribute("class", "all")
+                    div2.append(div, extraDiv)
+                    result.append(div2);
+                }
+                let btn = document.createElement("button");
+                btn.innerText = "More";
+                btn.setAttribute("id", "more");
+                btn.onclick = function(){
+                    loadmore(movie, year);
+                }
+                result.append(btn);
+            }  catch(err){
+            console.log(err);
+        }
+    }
+
+    async function loadmore(movie, year){
+        try {
+            let addbefore = document.getElementById("more");
+            i++;
+
+                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}&page=${i}`);
+
+                let data = await response.json();
+                let list = data.Search;
+                if(data.Response == "False"){
+                    let end = document.getElementById("more");
+                    end.remove();
+                    return null;
+                }
+
+                for(const ele of list){
+                    // console.log(ele)
+                    // let imdb = ele.imdbID;
+                    let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
+                    let movieData = await details.json();
+                    console.log(movieData);
+
+                    let div = document.createElement("div");
+                    div.setAttribute("class", "display")
+
+                    let div_img = document.createElement("div");
+                    let div_cont = document.createElement("div");
+                    div_cont.setAttribute("class", "left")
+
+                    let name = document.createElement("p");
+                    name.innerText = `Title: ${movieData.Title}`;
+
+                    let Year = document.createElement("p");
+                    Year.innerText = `Year: ${movieData.Year}`;
+
+                    let Director = document.createElement("p");
+                    Director.innerText = `Director: ${movieData.Director}`;
+
+                    let Actors = document.createElement("p");
+                    Actors.innerText = `Actors: ${movieData.Actors}`;
+
+                    let Plot = document.createElement("p");
+                    Plot.innerText = `Plot: ${movieData.Plot}`;
+
+                    let imdbRating = document.createElement("p");
+                    imdbRating.innerText = `imdbRating: ${movieData.imdbRating}`;
+
+                    div_cont.append(name, Year, Director, Actors, imdbRating, Plot);
+                    div_cont.setAttribute("class", "content");
+
+                    let image = document.createElement("img");
+                    image.src = movieData.Poster;
+                    div_img.setAttribute("class", "imgDiv");
+
+                    if(movieData.imdbRating > 8.5){
+                        let recomend = document.createElement("p");
+                        recomend.innerText = "Recommended";
+                        recomend.setAttribute("class", "recommended");
+                        div_img.append(image)
+                        div_cont.append(recomend);
+                    } else {
+                        ;
+                    }
+
+                    let extraDiv = document.createElement("div");
+                    extraDiv.setAttribute("id", ele.imdbID);
+                    extraDiv.setAttribute("class", "extra");
+                    let extrabtn = document.createElement("button");
+                    extrabtn.innerText = "v";
+                    extrabtn.setAttribute("class", "makecenter")
+                    extrabtn.onclick = function(){
+                        getMore(ele.imdbID)
+                    }
+                    extraDiv.append(extrabtn);
+
+                    div.append(div_img, div_cont);
+                    let div2 = document.createElement("div");
+                    div2.setAttribute("class", "all")
+                    div2.append(div, extraDiv)
+                    let addTo = document.getElementById("result");
+                    let btn = document.getElementById("more")
+                    addTo.insertBefore(div2, btn);
+                }
+            }  catch(err){
+            console.log(err);
+        }
+    }
+
+    async function getMore(imdb){
+        let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${imdb}&plot=full`);
+        let movieData = await details.json();
+
+        let div = document.getElementById(imdb);
+        div.innerHTML = null;
+
+        let Awards = document.createElement("p");
+        Awards.innerText = `Awards: ${movieData.Awards}`;
+
+        let Production = document.createElement("p");
+        Production.innerText = `Production: ${movieData.Production}`;
+
+        let Writer = document.createElement("p");
+        Writer.innerText = `Writer: ${movieData.Writer}`;
+
+        let Rated = document.createElement("p");
+        Rated.innerText = `Rated: ${movieData.Rated}`;
+
+        let Plot = document.createElement("p");
+        Plot.innerText = `Plot: ${movieData.Plot}`;
+
+        let rembtn = document.createElement("button");
+        rembtn.innerText = "^";
+        rembtn.setAttribute("class", "makecenter")
+        rembtn.onclick = function(){
+            getLess(imdb)
+        }
+
+        div.append(Awards, Production, Writer, Rated, Plot, rembtn)
+    }
+
+    function getLess(imdb){
+        let div = document.getElementById(imdb);
+        div.innerHTML = null;
+
+        let extrabtn = document.createElement("button");
+        extrabtn.innerText = "v";
+        extrabtn.setAttribute("class", "makecenter");
+        extrabtn.onclick = function(){
+            getMore(imdb)
+        }
+        div.append(extrabtn);
+    }
+
+    async function searchmovie(){
+        try {
+            let movie = document.getElementById("movieTitle").value;
+            if(movie == ""){
+                alert("Please enter Title");
+                return null;
+            }
+            let year = document.getElementById("year").value;
+            let result = document.getElementById("result");
+            result.innerHTML = null;
+
+                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&t=${movie}`);
+
+                let data = await response.json();
+                if(data.Response == "False"){
+                    let div = document.createElement("div")
+                    let errmess = document.createElement("p");
+                    // errmess.setAttribute("class", "errtext")
+                    errmess.innerText = "No matches available."
+                    let err = document.createElement("h3");
+                    err.innerText = 404;
+                    let errimg = document.createElement("img");
+                    errimg.src = "https://c.tenor.com/rSDkTtKXtpQAAAAC/error-computer.gif"
+                    div.append(err, errmess, errimg);
+                    div.setAttribute("class", "error");
+                    result.append(div)
+                    return null;
+                }
+
+                    console.log(data)
+
+                    let div = document.createElement("div");
+                    div.setAttribute("class", "display")
+
+                    let div_img = document.createElement("div");
+                    let div_cont = document.createElement("div");
+                    div_cont.setAttribute("class", "left")
+
+                    let name = document.createElement("p");
+                    name.innerText = `Title: ${data.Title}`;
+
+                    let Year = document.createElement("p");
+                    Year.innerText = `Year: ${data.Year}`;
+
+                    let Director = document.createElement("p");
+                    Director.innerText = `Director: ${data.Director}`;
+
+                    let Actors = document.createElement("p");
+                    Actors.innerText = `Actors: ${data.Actors}`;
+
+                    let Plot = document.createElement("p");
+                    Plot.innerText = `Plot: ${data.Plot}`;
+
+                    let imdbRating = document.createElement("p");
+                    imdbRating.innerText = `imdbRating: ${data.imdbRating}`;
+
+                    div_cont.append(name, Year, Director, Actors, imdbRating, Plot);
+                    div_cont.setAttribute("class", "content");
+
+                    let image = document.createElement("img");
+                    image.src = data.Poster;
+                    div_img.setAttribute("class", "imgDiv");
+                    
+                    if(data.imdbRating > 8.5){
+                        let recomend = document.createElement("p");
+                        recomend.innerText = "Recommended";
+                        recomend.setAttribute("class", "recommended");
+                        div_img.append(image, recomend);
+                    } else {
+                        div_img.append(image);
+                    }
+
+                    let extraDiv = document.createElement("div");
+                    extraDiv.setAttribute("id", data.imdbID);
+                    extraDiv.setAttribute("class", "extra");
+                    let extrabtn = document.createElement("button");
+                    extrabtn.innerText = "v";
+                    extrabtn.setAttribute("class", "makecenter")
+                    extrabtn.onclick = function(){
+                        getMore(data.imdbID)
+                    }
+                    extraDiv.append(extrabtn);
+
+                    div.append(div_img, div_cont);
+                    let div2 = document.createElement("div");
+                    div2.setAttribute("class", "all")
+                    div2.append(div, extraDiv)
+                    result.append(div2);
+            }  catch(err){
+            console.log(err);
+        }
+    }
+
+    async function searchimdb(){
+        try {
+            let movie = document.getElementById("movieImdb").value;
+            if(movie == ""){
+                alert("Please enter Title");
+                return null;
+            }
+            let year = document.getElementById("year").value;
+            let result = document.getElementById("result");
+            result.innerHTML = null;
+
+                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${movie}&plot=short`);
+
+                let data = await response.json();
+                if(data.Response == "False"){
+                    let div = document.createElement("div")
+                    let errmess = document.createElement("p");
+                    // errmess.setAttribute("class", "errtext")
+                    errmess.innerText = "No matches available."
+                    let err = document.createElement("h3");
+                    err.innerText = 404;
+                    let errimg = document.createElement("img");
+                    errimg.src = "https://c.tenor.com/rSDkTtKXtpQAAAAC/error-computer.gif"
+                    div.append(err, errmess, errimg);
+                    div.setAttribute("class", "error");
+                    result.append(div)
+                    return null;
+                }
+
+                    console.log(data)
+
+                    let div = document.createElement("div");
+                    div.setAttribute("class", "display")
+
+                    let div_img = document.createElement("div");
+                    let div_cont = document.createElement("div");
+                    div_cont.setAttribute("class", "left")
+
+                    let name = document.createElement("p");
+                    name.innerText = `Title: ${data.Title}`;
+
+                    let Year = document.createElement("p");
+                    Year.innerText = `Year: ${data.Year}`;
+
+                    let Director = document.createElement("p");
+                    Director.innerText = `Director: ${data.Director}`;
+
+                    let Actors = document.createElement("p");
+                    Actors.innerText = `Actors: ${data.Actors}`;
+
+                    let Plot = document.createElement("p");
+                    Plot.innerText = `Plot: ${data.Plot}`;
+
+                    let imdbRating = document.createElement("p");
+                    imdbRating.innerText = `imdbRating: ${data.imdbRating}`;
+
+                    div_cont.append(name, Year, Director, Actors, imdbRating, Plot);
+                    div_cont.setAttribute("class", "content");
+
+                    let image = document.createElement("img");
+                    image.src = data.Poster;
+                    div_img.setAttribute("class", "imgDiv");
+                    
+                    if(data.imdbRating > 8.5){
+                        let recomend = document.createElement("p");
+                        recomend.innerText = "Recommended";
+                        recomend.setAttribute("class", "recommended");
+                        div_img.append(image, recomend);
+                    } else {
+                        div_img.append(image);
+                    }
+
+                    let extraDiv = document.createElement("div");
+                    extraDiv.setAttribute("id", data.imdbID);
+                    extraDiv.setAttribute("class", "extra");
+                    let extrabtn = document.createElement("button");
+                    extrabtn.innerText = "v";
+                    extrabtn.setAttribute("class", "makecenter")
+                    extrabtn.onclick = function(){
+                        getMore(data.imdbID)
+                    }
+                    extraDiv.append(extrabtn);
+
+                    div.append(div_img, div_cont);
+                    let div2 = document.createElement("div");
+                    div2.setAttribute("class", "all")
+                    div2.append(div, extraDiv)
+                    result.append(div2);
+            }  catch(err){
+            console.log(err);
+        }
+    }
+//tt0096895
+</script>
