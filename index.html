@@ -262,7 +262,7 @@
             let result = document.getElementById("result");
             result.innerHTML = null;
 
-                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}`);
+                let response = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}`);
 
                 let data = await response.json();
                 let list = data.Search;
@@ -285,7 +285,7 @@
                 for(const ele of list){
                     // console.log(ele)
                     // let imdb = ele.imdbID;
-                    let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
+                    let details = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
                     let movieData = await details.json();
                     console.log(movieData);
 
@@ -364,7 +364,7 @@
             let addbefore = document.getElementById("more");
             i++;
 
-                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}&page=${i}`);
+                let response = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&s=${movie}&y=${year}&page=${i}`);
 
                 let data = await response.json();
                 let list = data.Search;
@@ -377,7 +377,7 @@
                 for(const ele of list){
                     // console.log(ele)
                     // let imdb = ele.imdbID;
-                    let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
+                    let details = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&i=${ele.imdbID}&plot=short`);
                     let movieData = await details.json();
                     console.log(movieData);
 
@@ -448,7 +448,7 @@
     }
 
     async function getMore(imdb){
-        let details = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${imdb}&plot=full`);
+        let details = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&i=${imdb}&plot=full`);
         let movieData = await details.json();
 
         let div = document.getElementById(imdb);
@@ -503,7 +503,7 @@
             let result = document.getElementById("result");
             result.innerHTML = null;
 
-                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&t=${movie}`);
+                let response = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&t=${movie}`);
 
                 let data = await response.json();
                 if(data.Response == "False"){
@@ -596,7 +596,7 @@
             let result = document.getElementById("result");
             result.innerHTML = null;
 
-                let response = await fetch(`http://www.omdbapi.com/?apikey=27b7fad2&i=${movie}&plot=short`);
+                let response = await fetch(`https://www.omdbapi.com/?apikey=27b7fad2&i=${movie}&plot=short`);
 
                 let data = await response.json();
                 if(data.Response == "False"){
