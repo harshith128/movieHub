@@ -28,4 +28,4 @@ Clone the project
 ## Features
 
 - Search a movie by title.
-- Search a movie bu IMDB id.
+- Search a movie by IMDB id.
